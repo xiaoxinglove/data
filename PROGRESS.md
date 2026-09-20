@@ -26,13 +26,20 @@
 
 单元测试模拟集成层失败，确认端到端层不执行。结果文件只在全部成功后写入。
 
-## README 同步记录
+## 文件与代码同步台账
 
-- 触发变化：依赖、OAuth 配置、资源接口、令牌端点、存储、模型调用和命令。
-- 对应段落：README 的接口、环境、运行、数据限制和验证范围。
-- 核对依据：pyproject.toml、uv.lock、app/main.py、app/security/oauth.py、
-  app/store.py、app/llm.py、run.ps1 和 scripts/check.py。
-- 结果：当前行为、配置、命令与限制已同步；F002 未写成已实现。
+本节是代码、配置、测试和文档同步工作的唯一记录入口。README 保持项目总说明
+手册结构，不承担变化日志职责。
+
+| 变更或核对对象 | 受影响说明 | 已同步文件 | 核对依据 | 结果 |
+| --- | --- | --- | --- | --- |
+| OAuth 2.0、JWT 与 scopes | 安全架构、接口、环境变量、限制 | README.md、DECISIONS.md、docs/api-patterns.md、app/security/ARCHITECTURE.md、app/security/PROGRESS.md | app/security/oauth.py、tests/integration/test_api.py、scripts/http_check.py | 已同步并通过集成、端到端验证 |
+| API 路由与请求响应 | 接口概览、调用示例、API 模块状态 | README.md、docs/features.md、app/api/ARCHITECTURE.md、app/api/PROGRESS.md | app/main.py、tests/integration/test_api.py | 已同步，5 个集成测试通过 |
+| 依赖、启动与完整验证 | 环境要求、安装、启动和验证命令 | README.md、Initialization.md、docs/testing-standards.md | pyproject.toml、uv.lock、run.ps1、scripts/check.py | 已同步，完整入口通过 |
+| 本地存储、检索与模型 | 当前架构、模块能力和限制 | README.md、app/rag/PROGRESS.md、docs/features.md | app/store.py、app/llm.py、tests/unit/test_mvp.py | 已同步，单元和端到端通过 |
+| 企业级 README 重构 | 项目总说明、当前架构、目标架构、模块、部署、安全、路线 | README.md、AGENTS.md、DECISIONS.md、docs/testing-standards.md、PROGRESS.md | 当前代码、配置、测试及 27 份项目文档交叉核对 | 已同步；没有把目标技术写成现状 |
+
+未同步项：无。`.vscode/` 是用户本地编辑器配置，与项目说明无关，保持未跟踪。
 
 ## 当前限制
 
