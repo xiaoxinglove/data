@@ -380,6 +380,10 @@ Prometheus、Grafana 和 OpenTelemetry 尚未接入。
 - API 规范见 docs/api-patterns.md；
 - 测试规范见 docs/testing-standards.md。
 
+每次项目迭代都必须核对并更新本手册，使当前能力、架构、接口、依赖、配置、
+运行方式、安全边界、限制和路线与交付代码一致。同步过程、核对依据和无需修改
+的原因统一记录在 PROGRESS.md，本手册不堆叠变化日志。
+
 提交消息使用 feat、fix、docs、refactor、test 等清晰前缀。
 功能完成以端到端验证通过为准。
 

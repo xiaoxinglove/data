@@ -1,6 +1,6 @@
 # 项目进度
 
-更新日期：2026-09-20
+更新日期：2026-09-21
 
 ## 当前交付：F001 最小可运行 MVP
 
@@ -29,7 +29,7 @@
 ## 文件与代码同步台账
 
 本节是代码、配置、测试和文档同步工作的唯一记录入口。README 保持项目总说明
-手册结构，不承担变化日志职责。
+手册结构并随每次迭代更新，不承担变化日志职责。
 
 | 变更或核对对象 | 受影响说明 | 已同步文件 | 核对依据 | 结果 |
 | --- | --- | --- | --- | --- |
@@ -38,6 +38,7 @@
 | 依赖、启动与完整验证 | 环境要求、安装、启动和验证命令 | README.md、Initialization.md、docs/testing-standards.md | pyproject.toml、uv.lock、run.ps1、scripts/check.py | 已同步，完整入口通过 |
 | 本地存储、检索与模型 | 当前架构、模块能力和限制 | README.md、app/rag/PROGRESS.md、docs/features.md | app/store.py、app/llm.py、tests/unit/test_mvp.py | 已同步，单元和端到端通过 |
 | 企业级 README 重构 | 项目总说明、当前架构、目标架构、模块、部署、安全、路线 | README.md、AGENTS.md、DECISIONS.md、docs/testing-standards.md、PROGRESS.md | 当前代码、配置、测试及 27 份项目文档交叉核对 | 已同步；没有把目标技术写成现状 |
+| README 迭代更新规则 | 明确 README 随每次迭代核对更新，PROGRESS 记录同步过程 | README.md、AGENTS.md、DECISIONS.md、PROGRESS.md | 用户要求及现有文档职责交叉核对 | 已同步；消除“稳定手册等于不更新”的歧义 |
 
 未同步项：无。`.vscode/` 是用户本地编辑器配置，与项目说明无关，保持未跟踪。
 
