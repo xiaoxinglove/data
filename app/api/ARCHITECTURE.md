@@ -2,17 +2,18 @@
 
 ## 当前实现
 
-app/main.py 创建 FastAPI 应用并注册 app/api/router.py。
+app/main.py 创建 FastAPI 应用：
 
-当前路由：
+- POST /oauth/token：HTTP Basic 客户端认证，client_credentials 签发 JWT。
+- GET /health：需要 health:read。
+- POST /documents：需要 documents:write，写入本地文档。
+- POST /chat：需要 chat:use，检索后调用模型。
+- POST /enterprise/{channel}：需要 enterprise:write，固定返回 501。
 
-- GET /health：固定返回状态和版本。
-- POST /chat：接收未建模的 dict，调用 AgentKernel.run。
-- POST /enterprise/{channel}：回显 channel 并固定接受。
+输入使用 Pydantic 模型；认证与 scope 校验由 app/security/oauth.py 提供。
+OpenAPI、Swagger UI 和 ReDoc 关闭。app/api/router.py 仅保留兼容说明。
 
-三个路由均未认证，输入和响应没有 Pydantic 模型。
+## 边界
 
-## 目标边界
-
-API 层负责 HTTP 协议、输入校验、认证依赖和响应映射；业务逻辑交给模块。
-修改路由或使用方式时同步 README.md，并按 docs/api-patterns.md 验证成功及拒绝路径。
+API 层处理协议、输入验证、安全依赖和响应映射。文档检索由 DocumentStore
+完成，模型调用由 app/llm.py 完成。修改路由时同步 README 和集成测试。

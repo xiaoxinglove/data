@@ -1,47 +1,89 @@
-# 云南林草科技服务数字化平台：后端骨架
+# 云南林草科技服务数字化平台：最小可运行 MVP
 
-当前仓库包含 Python / FastAPI 接口和模块占位实现。尚未形成真实知识库问答闭环，也未完成部署或端到端验收。
+这是一个经过本地端到端验证的 FastAPI 知识问答 MVP：通过 OAuth 2.0
+客户端凭据取得 JWT，写入本地文档，用关键词检索相关资料，再调用 OpenAI
+兼容的模型接口生成带来源的回答。
 
-## 当前代码行为
+## 已实现接口
 
-| 入口 | 当前行为 | 限制 |
+| 接口 | Scope | 行为 |
 | --- | --- | --- |
-| GET /health | 固定返回 healthy 和版本 5.7 | 未检查依赖，无认证 |
-| POST /chat | 读取 query，返回 query、context、documents、status | 上下文和文档为空，无模型生成，无认证 |
-| POST /enterprise/{channel} | 回显 channel，返回 accepted: true | 未分发、未验签，不代表消息处理成功 |
-| data 命令 | 打印 Hello from data! | 包示例入口，不启动 API |
+| POST /oauth/token | HTTP Basic 客户端认证 | client_credentials 换取 15 分钟 JWT |
+| GET /health | health:read | 返回 status=healthy |
+| POST /documents | documents:write | 写入标题和正文，返回 201 |
+| POST /chat | chat:use | 检索资料；命中后调用模型，返回 answer 和 sources |
+| POST /enterprise/{channel} | enterprise:write | 明确返回 501，渠道尚未实现 |
 
-API 源码入口是 app/main.py。包版本是 0.1.0；API 中的 5.7 是历史硬编码，不能用作成熟度或发布证明。
-当前安全模块和渠道校验恒真返回，且尚未接入 API，不能用于受信任的生产访问控制。
+除令牌端点外，所有接口要求 Bearer JWT，并验证签发者、受众、有效期和 scope。
+令牌端点通过 HTTP Basic 验证机密客户端。Swagger、ReDoc 和 OpenAPI 路由关闭。
 
-## 环境与运行现状
+## 环境
 
-- pyproject.toml 要求 Python >=3.14，.python-version 指定 3.14。
-- 使用 uv 管理项目；当前 dependencies 为空，没有 uv.lock。
-- FastAPI 被源码引用但未声明依赖，ASGI 服务依赖也未配置。
-- 没有 Makefile、测试套件、统一检查脚本或前端工程。
+需要 Python 3.14 和 uv。应用不会自动读取 .env。
 
-目前没有经过验证的完整安装、服务启动和验收命令。后续补齐依赖与环境后，ASGI 目标应为 app.main:app；现有 data 示例命令不是服务启动命令。环境证据见 Initialization.md。
+~~~powershell
+$env:OAUTH_CLIENT_ID = "local-mvp"
+$env:OAUTH_CLIENT_SECRET = "replace-with-a-client-secret"
+$env:OAUTH_JWT_SECRET = "replace-with-at-least-32-random-bytes"
+~~~
 
-## 目录
+匹配到资料并需要生成回答时还要设置：
 
-- app/main.py、app/api/router.py：HTTP 应用与路由。
-- app/agent/kernel.py：调用 Memory、RAG 并组装占位结果。
-- app/rag、app/memory、app/mcp：检索、记忆、工具占位实现。
-- app/channels、app/security、app/evaluation：渠道、安全、评估占位实现。
-- src/data/__init__.py：包命令示例。
-- docs/：API、存储、测试规范和功能验收定义。
+~~~powershell
+$env:GLM_API_KEY = "your-api-key"
+$env:GLM_BASE_URL = "https://api.siliconflow.cn/v1"
+$env:GLM_MODEL = "zai-org/GLM-5.3"
+~~~
 
-## 未实现能力
+GLM_BASE_URL 必须兼容 OpenAI 的 /chat/completions 请求结构。没有匹配资料时
+不会调用模型；有匹配资料但缺少 API Key 时返回 502。
 
-真实文档解析、向量检索、模型回答、持久化、OAuth/OIDC、渠道回调和评估均未完成。
-当前未集成 LangGraph、CrewAI、Milvus、Neo4j 或 MySQL；这些名称不代表已选定或已实现的技术方案。
+## 安装、验证与启动
 
-.env 是本地敏感配置文件，已由 .gitignore 忽略。当前源码没有已实现的配置加载契约，README 不列出或复制其中的值。
+~~~powershell
+uv sync --locked
+uv run python scripts/check.py
+.\run.ps1
+~~~
 
-## 文档同步
+run.ps1 在 127.0.0.1:8008 启动服务。也可直接运行：
 
-涉及功能、接口、依赖、配置、目录或启动命令的代码变更必须同步本文件，并记录验证证据。纯内部改动不影响使用说明时，可在进度中记录无需修改的理由。
-每次交付在 PROGRESS.md 记录“触发变化 → 本文件对应段落 → 核对依据与结果”。不影响用户使用的内部变化记录无需修改的理由。
-这是协作交付规则；仓库尚未实现 README 自动生成或同步 CI。
-实际状态见 PROGRESS.md；贡献规则见 AGENTS.md。
+~~~powershell
+uv run uvicorn app.main:app --host 127.0.0.1 --port 8008
+~~~
+
+获取令牌：
+
+~~~powershell
+$credentialText = "{0}:{1}" -f $env:OAUTH_CLIENT_ID, $env:OAUTH_CLIENT_SECRET
+$basic = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes($credentialText))
+$tokenResponse = Invoke-RestMethod -Method Post -Uri http://127.0.0.1:8008/oauth/token -Headers @{ Authorization = "Basic $basic" } -ContentType "application/x-www-form-urlencoded" -Body "grant_type=client_credentials&scope=health%3Aread+chat%3Ause+documents%3Awrite"
+$headers = @{ Authorization = "Bearer $($tokenResponse.access_token)" }
+~~~
+
+写入资料并提问：
+
+~~~powershell
+Invoke-RestMethod -Method Post -Uri http://127.0.0.1:8008/documents -Headers $headers -ContentType "application/json" -Body '{"title":"森林防火","content":"严禁携带火种进入林区。"}'
+Invoke-RestMethod -Method Post -Uri http://127.0.0.1:8008/chat -Headers $headers -ContentType "application/json" -Body '{"query":"森林防火有哪些要求"}'
+~~~
+
+## 数据与限制
+
+文档默认保存在 local_data/documents.json，可用 KNOWLEDGE_BASE_PATH 修改。
+写入采用临时文件替换和进程内锁，不支持多进程并发写入。
+检索是中文双字词及英文词的简单匹配，不是向量检索。
+模型请求超时 60 秒，没有重试、流式输出或内容审计。
+本地客户端凭据和 HS256 JWT 仅用于 MVP；生产部署需要独立 OAuth/OIDC
+提供方、密钥轮换、TLS、限流、审计和租户隔离。
+
+app/agent、app/rag、app/memory、app/mcp、app/channels 和 app/evaluation
+仍是未启用的架构占位模块。
+
+## 验证范围
+
+scripts/check.py 顺序运行 Ruff、mypy strict、单元测试、API 集成测试和真实
+HTTP 端到端测试。端到端使用本地假模型，不消耗真实 API Key。
+通过结果写入被忽略的 .check_data/F001.json。
+
+实际证据见 PROGRESS.md。代码影响接口、配置、依赖或命令时必须同步本文件。

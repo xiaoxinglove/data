@@ -8,5 +8,7 @@
 - `uv --version`：项目工具是否可用。
 - `uv python find`：项目选择的 Python 路径，与系统 python 别名区分。
 - `uv lock --check`：锁文件是否存在且与依赖声明一致，失败须记录原因。
+- `uv sync --locked`：严格按锁文件建立环境。
+- `uv run python scripts/check.py`：依次执行静态、类型、单元、集成和端到端验证。
 
-安装、启动和验证应使用 README.md 中已经实现且验证过的命令。尚未实现的计划命令见 docs/features.md，不得作为已可用入口。
+安装、启动和验证使用 README.md 中已经验证过的命令。

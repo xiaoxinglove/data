@@ -2,12 +2,18 @@
 
 ## 当前实现
 
-app/security/rbac.py 提供 RBAC.check(user, resource)，当前恒真返回。
-该类未接入 API、Agent 或 MCP。尚未实现角色管理与资源权限决策。
+app/security/oauth.py 实现最小 OAuth 2.0 客户端凭据流程：
 
-恒真返回是未完成的安全占位，不能作为认证或授权能力。
+- /oauth/token 通过 HTTP Basic 验证机密客户端。
+- 仅接受 client_credentials 和预定义 scopes。
+- 使用 HS256 签发 15 分钟 JWT。
+- 资源端验证签发者、受众、有效期和 scope。
+- 缺失或无效令牌返回 401，scope 不足返回 403。
+- OAuth 配置缺失时返回 503。
 
-## 目标边界
+客户端与 JWT 密钥由环境变量提供。RBAC.check 仍是未接入的恒真占位。
 
-Security 负责验证可信身份、制定权限决策，并向下游传递用户、租户和资源范围。
-业务 API 默认拒绝匿名访问；渠道回调使用渠道协议验签。缺少身份、权限或资源上下文时默认拒绝。
+## 边界
+
+本地签发方案用于单实例 MVP。生产环境应使用独立 OAuth/OIDC 提供方、
+客户端注册、密钥轮换、TLS、撤销和审计。
