@@ -298,6 +298,17 @@ uv run python scripts/check.py
 
 默认地址：http://127.0.0.1:8008
 
+也可以直接执行入口文件：
+
+~~~powershell
+$env:APP_HOST = "127.0.0.1"
+$env:APP_PORT = "8008"
+python app/main.py
+~~~
+
+`APP_HOST` 和 `APP_PORT` 可选，默认值分别为 `127.0.0.1` 和 `8008`。
+执行所用的 Python 环境必须已安装项目依赖。
+
 也可以直接运行：
 
 ~~~powershell

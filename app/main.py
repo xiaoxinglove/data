@@ -1,14 +1,18 @@
 from __future__ import annotations
 
 import os
+import sys
 from pathlib import Path
 
 from fastapi import FastAPI, HTTPException, Security
 from pydantic import BaseModel, Field
 
-from app.llm import LLMError, call_glm
-from app.security.oauth import require_token, token_endpoint
-from app.store import DocumentStore
+if __name__ == "__main__" and __package__ is None:
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+from app.llm import LLMError, call_glm  # noqa: E402
+from app.security.oauth import require_token, token_endpoint  # noqa: E402
+from app.store import DocumentStore  # noqa: E402
 
 
 class DocumentInput(BaseModel):
@@ -79,3 +83,13 @@ def chat(data: ChatInput) -> dict[str, object]:
 )
 def enterprise(channel: str) -> None:
     raise HTTPException(status_code=501, detail=f"渠道 {channel} 尚未实现")
+
+
+if __name__ == "__main__":
+    import uvicorn
+
+    uvicorn.run(
+        app,
+        host=os.environ.get("APP_HOST", "127.0.0.1"),
+        port=int(os.environ.get("APP_PORT", "8008")),
+    )

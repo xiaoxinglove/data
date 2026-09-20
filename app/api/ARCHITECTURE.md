@@ -12,6 +12,7 @@ app/main.py 创建 FastAPI 应用：
 
 输入使用 Pydantic 模型；认证与 scope 校验由 app/security/oauth.py 提供。
 OpenAPI、Swagger UI 和 ReDoc 关闭。app/api/router.py 仅保留兼容说明。
+app/main.py 既可作为 ASGI 模块导入，也可作为脚本直接启动 Uvicorn。
 
 ## 边界
 
