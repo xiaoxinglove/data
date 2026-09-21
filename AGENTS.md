@@ -58,7 +58,7 @@
 - README.md：当前能力、环境和使用说明。
 - Initialization.md：环境基线；plan.md：当前交付计划。
 - docs/features.md：功能与验收；人工维护需求，验证器维护通过结果；验证器建立与自测纳入 F001，在此之前不得标 passing。
-- app/*/ARCHITECTURE.md：当前接口与明确标注的目标边界。
-- app/*/PROGRESS.md：模块事实、验证、限制和下一步。
+- backend/*/ARCHITECTURE.md：当前接口与明确标注的目标边界。
+- backend/*/PROGRESS.md：模块事实、验证、限制和下一步。
 - 添加或修改 API 读 docs/api-patterns.md；存储变更读 docs/database-rules.md；测试变更读 docs/testing-standards.md。
 - 所有路径相对仓库根目录；统一使用 AGENTS.md、PROGRESS.md、README.md 的大小写。

@@ -2,7 +2,7 @@
 
 ## 当前实现
 
-app/evaluation/evaluator.py 提供 Evaluator.run(result)，固定返回：
+backend/evaluation/evaluator.py 提供 Evaluator.run(result)，固定返回：
 
 - faithfulness: None
 - retrieval_quality: None

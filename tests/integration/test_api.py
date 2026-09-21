@@ -44,7 +44,7 @@ def test_document_and_chat_flow(
     )
     assert created.status_code == 201
 
-    with patch("app.main.call_glm", return_value="进入林区不得携带火种。"):
+    with patch("backend.main.call_glm", return_value="进入林区不得携带火种。"):
         response = client.post(
             "/chat",
             headers=_bearer(token),

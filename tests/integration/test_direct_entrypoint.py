@@ -20,13 +20,13 @@ def test_main_file_can_be_executed_directly(tmp_path: Path) -> None:
             "OAUTH_JWT_SECRET": "test-jwt-secret-that-is-at-least-32-bytes",
         }
     )
-    conflicting_package = tmp_path / "app"
+    conflicting_package = tmp_path / "backend"
     conflicting_package.mkdir()
     (conflicting_package / "__init__.py").write_text("", encoding="utf-8")
     environment["PYTHONPATH"] = os.pathsep.join(
         filter(None, (str(tmp_path), environment.get("PYTHONPATH")))
     )
-    main_file = Path(__file__).parents[2] / "app" / "main.py"
+    main_file = Path(__file__).parents[2] / "backend" / "main.py"
     process = subprocess.Popen(
         (sys.executable, str(main_file)),
         env=environment,
@@ -48,7 +48,7 @@ def test_main_file_can_be_executed_directly(tmp_path: Path) -> None:
             except urllib.error.URLError:
                 time.sleep(0.1)
         else:
-            raise AssertionError("直接执行 app/main.py 后服务未启动")
+            raise AssertionError("直接执行 backend/main.py 后服务未启动")
     finally:
         process.terminate()
         process.wait(timeout=5)

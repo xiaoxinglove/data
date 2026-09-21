@@ -2,7 +2,7 @@
 
 ## 当前实现
 
-app/mcp/runtime.py 提供 MCPRuntime.execute(tool, args)，返回工具名和 result=None。
+backend/mcp/runtime.py 提供 MCPRuntime.execute(tool, args)，返回工具名和 result=None。
 尚未实现注册、校验、超时或外部调用。
 
 ## 目标边界

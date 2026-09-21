@@ -2,7 +2,7 @@
 
 ## 当前实现
 
-app/memory/manager.py 提供：
+backend/memory/manager.py 提供：
 
 - recall()：固定返回空列表。
 - save(item)：不保存数据，返回 None。

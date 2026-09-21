@@ -6,7 +6,7 @@ import urllib.error
 import urllib.request
 from collections.abc import Sequence
 
-from app.store import Document
+from backend.store import Document
 
 DEFAULT_BASE_URL = "https://api.siliconflow.cn/v1"
 DEFAULT_MODEL = "zai-org/GLM-5.3"

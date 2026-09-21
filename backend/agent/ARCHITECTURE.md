@@ -2,7 +2,7 @@
 
 ## 当前实现
 
-app/agent/kernel.py 提供 AgentKernel：
+backend/agent/kernel.py 提供 AgentKernel：
 - 初始化 MemoryManager、RAGPipeline 和 MCPRuntime。
 - run(query) 调用 memory.recall() 与 rag.retrieve(query)。
 - 返回 query、context、documents 和固定 status=completed。

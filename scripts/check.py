@@ -16,7 +16,14 @@ STEPS: tuple[tuple[str, Command], ...] = (
     ("单元测试", (sys.executable, "-m", "pytest", "tests/unit", "-q")),
     (
         "集成测试",
-        (sys.executable, "-m", "pytest", "tests/integration", "-q"),
+        (
+            sys.executable,
+            "-m",
+            "pytest",
+            "tests/integration",
+            "tests/security",
+            "-q",
+        ),
     ),
     ("端到端测试", (sys.executable, "scripts/http_check.py")),
 )

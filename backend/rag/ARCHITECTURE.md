@@ -2,7 +2,7 @@
 
 ## 当前实现
 
-app/rag/pipeline.py 提供：
+backend/rag/pipeline.py 提供：
 
 - retrieve(query)：固定返回空列表。
 - rerank(docs)：原样返回输入。

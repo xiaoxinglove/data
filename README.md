@@ -149,12 +149,12 @@ Grafana 当前都不是运行依赖。后续引入必须先形成决策记录和
 
 ### 5.1 API
 
-app/main.py 提供令牌、健康检查、资料写入、问答和渠道占位接口。
+backend/main.py 提供令牌、健康检查、资料写入、问答和渠道占位接口。
 请求模型负责输入边界，安全依赖负责 JWT 和 scope 校验。
 
 ### 5.2 Security
 
-app/security/oauth.py 实现本地 OAuth 2.0 客户端凭据闭环：
+backend/security/oauth.py 实现本地 OAuth 2.0 客户端凭据闭环：
 
 - HTTP Basic 客户端认证；
 - 15 分钟 JWT；
@@ -167,7 +167,7 @@ app/security/oauth.py 实现本地 OAuth 2.0 客户端凭据闭环：
 
 ### 5.3 Document Store
 
-app/store.py 将文档写入本地 JSON 文件，使用进程内锁和临时文件替换降低
+backend/store.py 将文档写入本地 JSON 文件，使用进程内锁和临时文件替换降低
 单进程写入损坏风险。它不支持多进程并发、数据库事务或租户隔离。
 
 ### 5.4 Retrieval
@@ -177,12 +177,12 @@ app/store.py 将文档写入本地 JSON 文件，使用进程内锁和临时文�
 
 ### 5.5 LLM
 
-app/llm.py 调用 OpenAI Compatible 的 /chat/completions 接口。系统提示要求
+backend/llm.py 调用 OpenAI Compatible 的 /chat/completions 接口。系统提示要求
 只依据检索资料回答；模型错误转换为明确的 API 错误。
 
 ### 5.6 架构占位模块
 
-app/agent、app/rag、app/memory、app/mcp、app/channels 和 app/evaluation
+backend/agent、backend/rag、backend/memory、backend/mcp、backend/channels 和 backend/evaluation
 尚未接入 MVP 主链路。目录存在不代表功能已经完成。
 
 ---
@@ -198,14 +198,14 @@ app/agent、app/rag、app/memory、app/mcp、app/channels 和 app/evaluation
 | POST /enterprise/{channel} | enterprise:write | 501 Not Implemented |
 
 Swagger、ReDoc 和 OpenAPI 路由在 MVP 中关闭。详细输入、错误和示例以测试及
-app/main.py 为准。
+backend/main.py 为准。
 
 ---
 
 ## 7. 项目结构
 
 ~~~text
-data/
+Forest Production Platform/
 ├── AGENTS.md                  项目协作总则
 ├── CONSTRAINTS.md             约束索引
 ├── DECISIONS.md               架构决策
@@ -215,18 +215,26 @@ data/
 ├── pyproject.toml             依赖与工具配置
 ├── uv.lock                    锁定依赖
 ├── run.ps1                    Windows 启动与验证入口
-├── app/
-│   ├── main.py                FastAPI 应用
+├── backend/
+│   ├── main.py                FastAPI 应用（当前 MVP 主链路）
 │   ├── store.py               本地文档存储与检索
 │   ├── llm.py                 模型适配
 │   ├── security/oauth.py      OAuth 2.0 与 JWT
+│   ├── agent/ api/ channels/ evaluation/ mcp/ memory/ rag/
+│   │                          未接入主链路的占位模块
+│   ├── core/ observability/   空目录，仅占位
 │   └── */ARCHITECTURE.md      模块边界
 ├── scripts/
 │   ├── check.py               顺序验证器
 │   └── http_check.py          真实 HTTP 端到端验证
 ├── tests/
-│   ├── unit/
-│   └── integration/
+│   ├── unit/                  4 个单元测试
+│   ├── integration/           6 个集成测试
+│   ├── security/              11 个 OAuth 安全测试
+│   └── evaluation/            占位目录，无用例
+├── frontend/                  Vue + Vite 骨架，未安装依赖、未接入后端 API
+├── deploy/                    Prometheus / Loki / Grafana 配置骨架，未启用
+├── src/                       uv init 残留样板包，未被应用引用
 └── docs/
     ├── features.md
     ├── api-patterns.md
@@ -303,7 +311,7 @@ uv run python scripts/check.py
 ~~~powershell
 $env:APP_HOST = "127.0.0.1"
 $env:APP_PORT = "8008"
-python app/main.py
+python backend/main.py
 ~~~
 
 `APP_HOST` 和 `APP_PORT` 可选，默认值分别为 `127.0.0.1` 和 `8008`。
@@ -312,7 +320,7 @@ python app/main.py
 也可以直接运行：
 
 ~~~powershell
-uv run uvicorn app.main:app --host 127.0.0.1 --port 8008
+uv run uvicorn backend.main:app --host 127.0.0.1 --port 8008
 ~~~
 
 ---

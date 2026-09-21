@@ -10,7 +10,7 @@
 - 自动 OpenAPI、Swagger UI 和 ReDoc 在 MVP 中关闭，避免新增匿名 API 面。
 - 渠道回调使用渠道要求的签名、时效与防重放验证，不强行套用交互式登录流程。
 - 控制器负责协议、校验和响应映射，业务交给相应模块；错误不得泄露密钥或内部堆栈。
-- 修改路由、参数、响应结构或启动方式时，同步 README.md 和 app/api/ARCHITECTURE.md。
+- 修改路由、参数、响应结构或启动方式时，同步 README.md 和 backend/api/ARCHITECTURE.md。
 - 验收覆盖合法请求、无凭据、无效凭据、权限不足和输入错误。
 
 当前资源路由是 /health、/documents、/chat、/enterprise/{channel}；令牌端点是

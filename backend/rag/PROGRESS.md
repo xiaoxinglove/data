@@ -16,7 +16,7 @@ F001 只验证服务闭环；真实 RAG 需单独激活 F002，并先定义资�
 
 ## F001 说明
 
-MVP 使用 app/store.py 的本地 JSON 持久化和关键词匹配，并通过 app/llm.py 调用 OpenAI 兼容的模型端点。它没有使用本目录的 RAGPipeline，也不属于向量 RAG。
+MVP 使用 backend/store.py 的本地 JSON 持久化和关键词匹配，并通过 backend/llm.py 调用 OpenAI 兼容的模型端点。它没有使用本目录的 RAGPipeline，也不属于向量 RAG。
 
 ## 文档复审记录
 

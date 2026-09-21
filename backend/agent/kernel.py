@@ -1,6 +1,6 @@
-from app.mcp.runtime import MCPRuntime
-from app.memory.manager import MemoryManager
-from app.rag.pipeline import RAGPipeline
+from backend.mcp.runtime import MCPRuntime
+from backend.memory.manager import MemoryManager
+from backend.rag.pipeline import RAGPipeline
 
 
 class AgentKernel:

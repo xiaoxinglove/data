@@ -21,4 +21,4 @@ foreach ($name in @("OAUTH_CLIENT_ID", "OAUTH_CLIENT_SECRET", "OAUTH_JWT_SECRET"
     }
 }
 
-uv run uvicorn app.main:app --host 127.0.0.1 --port 8008
+uv run uvicorn backend.main:app --host 127.0.0.1 --port 8008

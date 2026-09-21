@@ -5,8 +5,8 @@ import unittest
 from pathlib import Path
 from unittest.mock import patch
 
-from app.main import ChatInput, chat
-from app.store import DocumentStore
+from backend.main import ChatInput, chat
+from backend.store import DocumentStore
 
 
 class DocumentStoreUnitTests(unittest.TestCase):
@@ -24,8 +24,8 @@ class ChatTests(unittest.TestCase):
             test_store = DocumentStore(Path(directory) / "documents.json")
             written = test_store.add("森林防火", "进入林区严禁携带火种。")
             with (
-                patch("app.main.store", test_store),
-                patch("app.main.call_glm", return_value="应禁止携带火种。") as llm,
+                patch("backend.main.store", test_store),
+                patch("backend.main.call_glm", return_value="应禁止携带火种。") as llm,
             ):
                 result = chat(ChatInput(query="森林防火有哪些要求"))
         self.assertEqual(result["answer"], "应禁止携带火种。")
@@ -39,8 +39,8 @@ class ChatTests(unittest.TestCase):
             test_store = DocumentStore(Path(directory) / "documents.json")
             test_store.add("森林防火", "进入林区严禁携带火种。")
             with (
-                patch("app.main.store", test_store),
-                patch("app.main.call_glm") as llm,
+                patch("backend.main.store", test_store),
+                patch("backend.main.call_glm") as llm,
             ):
                 result = chat(ChatInput(query="海洋潮汐观测"))
         self.assertEqual(result, {"answer": "未找到相关资料", "sources": []})

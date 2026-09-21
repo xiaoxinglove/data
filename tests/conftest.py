@@ -19,8 +19,8 @@ def oauth_environment(monkeypatch: pytest.MonkeyPatch) -> None:
 def client(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Iterator[TestClient]:
     path = tmp_path / "documents.json"
     monkeypatch.setenv("KNOWLEDGE_BASE_PATH", str(path))
-    from app import main
-    from app.store import DocumentStore
+    from backend import main
+    from backend.store import DocumentStore
 
     monkeypatch.setattr(main, "store", DocumentStore(path))
     with TestClient(main.app) as test_client:

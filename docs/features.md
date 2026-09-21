@@ -11,7 +11,7 @@
 ## F001 已实现契约
 
 - 安装：uv sync --locked。
-- 启动：uv run uvicorn app.main:app --host 127.0.0.1 --port 8008。
+- 启动：uv run uvicorn backend.main:app --host 127.0.0.1 --port 8008。
 - 完整验证：uv run python scripts/check.py。
 - /oauth/token 仅接受 HTTP Basic 客户端认证和 client_credentials。
 - 资源接口分别验证所需 scope。

@@ -2,7 +2,7 @@
 
 ## 当前实现
 
-app/security/oauth.py 实现最小 OAuth 2.0 客户端凭据流程：
+backend/security/oauth.py 实现最小 OAuth 2.0 客户端凭据流程：
 
 - /oauth/token 通过 HTTP Basic 验证机密客户端。
 - 仅接受 client_credentials 和预定义 scopes。

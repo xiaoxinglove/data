@@ -7,12 +7,13 @@ from pathlib import Path
 from fastapi import FastAPI, HTTPException, Security
 from pydantic import BaseModel, Field
 
+ROOT_DIR = Path(__file__).resolve().parents[1]
 if __name__ == "__main__" and __package__ is None:
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+    sys.path.insert(0, str(ROOT_DIR))
 
-from app.llm import LLMError, call_glm  # noqa: E402
-from app.security.oauth import require_token, token_endpoint  # noqa: E402
-from app.store import DocumentStore  # noqa: E402
+from backend.llm import LLMError, call_glm  # noqa: E402
+from backend.security.oauth import require_token, token_endpoint  # noqa: E402
+from backend.store import DocumentStore  # noqa: E402
 
 
 class DocumentInput(BaseModel):
