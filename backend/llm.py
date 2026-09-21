@@ -5,8 +5,16 @@ import os
 import urllib.error
 import urllib.request
 from collections.abc import Sequence
+from pathlib import Path
+import sys
+ROOT_DIR = Path(__file__).resolve().parents[1]
+if __name__ == "__main__" and __package__ is None:
+    sys.path.insert(0, str(ROOT_DIR)) 
+
+
 
 from backend.store import Document
+    
 
 DEFAULT_BASE_URL = "https://api.siliconflow.cn/v1"
 DEFAULT_MODEL = "zai-org/GLM-5.3"
